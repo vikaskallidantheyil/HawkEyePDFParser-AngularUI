@@ -1,0 +1,273 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid ">
+    <div class="navbar-header">
+      <strong class="navbarHeader">Hawk-Eye PDF Parser</strong>
+    </div>
+  </div>
+</nav> 338px; left: 88px; height: 52px; width: 197px; display: none;"></div>
+      <div>
+      <canvas id="the-canvas" style="border:1px  solid black" width="100%" height="100%"></canvas>
+      </div>
+
+      <script id="script">
+          var url = './adish o v.pdf';
+          //Loaded via <script> tag, create shortcut to access PDF.js exports.
+          var pdfjsLib = window['node_modules/ng2-pdfjs-viewer/pdfjs/build/pdf'];
+
+          // The workerSrc property shall be specified.
+          pdfjsLib.GlobalWorkerOptions.workerSrc = '/js/pdf.worker.js';
+
+          // Asynchronous download of PDF
+          var loadingTask = pdfjsLib.getDocument(url);
+          loadingTask.promise.then(function(pdf) {
+            console.log('PDF loaded');
+
+            // Fetch the first page
+            var pageNumber = 1;
+            pdf.getPage(pageNumber).then(function(page) {
+              console.log('Page loaded');
+
+              var scale = 1.5;
+              //var viewport = page.getViewport({scale: scale});
+              var viewport = page.getViewport(scale);
+              // Prepare canvas using PDF page dimensions
+              var canvas = document.getElementById('the-canvas');
+              var context = canvas.getContext('2d');
+              canvas.height = viewport.height;
+              canvas.width = viewport.width;
+
+              // Render PDF page into canvas context
+              var renderContext = {
+                canvasContext: context,
+                viewport: viewport
+              };
+              var renderTask = page.render(renderContext);
+              renderTask.promise.then(function () {
+                console.log('Page rendered');
+              });
+              var startX,
+              startY,
+              selectedBoxes = [],
+              $selectionMarquee = $('#selectionMarquee'),
+              $allCords = $('#all-cords'),
+              positionBox = function ($box, coordinates) {
+                  $box.css(
+                      'top', coordinates.top
+                  ).css(
+                      'left', coordinates.left
+                  ).css(
+                      'height', coordinates.bottom - coordinates.top
+                  ).css(
+                      'width', coordinates.right - coordinates.left
+                  );
+              },
+
+              compareNumbers = function (a, b) {
+                  return a - b;
+              },
+              getBoxCoordinates = function (startX, startY, endX, endY) {
+                  var x = [startX, endX].sort(compareNumbers),
+                      y = [startY, endY].sort(compareNumbers);
+
+                  return {
+                      top: y[0],
+                      left: x[0],
+                      right: x[1],
+                      bottom: y[1]
+                  };
+              },
+              trackMouse = function (event) {
+                  var position = getBoxCoordinates(startX, startY, event.pageX, event.pageY);
+                  console.log(position);
+                  positionBox($selectionMarquee, position);
+              },
+              displayCoordinates = function () {
+                  var msg = 'Boxes so far:\n';
+
+                  selectedBoxes.forEach(function (box) {
+                      msg += '<li>(' + box.left + ', ' + box.top + ') - (' + (box.left + box.right) + ', ' + (box.top + box.bottom) + ')</li>';
+                  });
+                  $allCords.html(msg);
+              };
+
+              var canvas = document.getElementById('the-canvas');
+          $(document).on('mousedown', function (event) {
+              startX = event.pageX;
+              startY = event.pageY;
+              positionBox($selectionMarquee, getBoxCoordinates(startX, startY, startX, startY));
+              $selectionMarquee.show();
+              $(this).on('mousemove', trackMouse);
+          }).on('mouseup', function (event) {
+              var position,
+                  $selectedBox;
+
+                  $selectionMarquee.hide();
+
+                  position = getBoxCoordinates(startX, startY, event.pageX, event.pageY);
+
+                  if (position.left !== position.right && position.top !== position.bottom) {
+                      $selectedBox = $('<div class="selected-box"></div>');
+                      $selectedBox.hide();
+                      $('body').append($selectedBox);
+
+                      positionBox($selectedBox, position);
+
+                      $selectedBox.show();
+
+                      selectedBoxes.push(position);
+                      displayCoordinates();
+                      $(this).off('mousemove', trackMouse);
+                  }
+          });
+            });
+          }, function (reason) {
+            // PDF loading error
+            console.error(reason);
+          });
+
+
+          $(function () {
+              "use strict";
+
+          });
+
+
+          </script>
+
+
+    </div>
+    <div class="col-md-6">
+
+      <tabs class="mat-tab">
+        <tab tabTitle="Personal Details (Proposed Insured)">
+
+          <form [formGroup]="personalFormPI">
+            <div class="form-group">
+              <label for="pipurpose">Purpose of insurance:</label>
+              <span><input type="text" class="form-control" id="pipurpose" name="pipurpose"
+                  formControlName="pipurpose"></span>
+            </div>
+            <div class="form-group">
+              <label for="pifirstname">First Name:</label><span>
+                <input type="text" class="form-control" id="pifirstname" name="pifirstname"
+                  formControlName="pifirstname">
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="pimiddlename">Middle Name:</label>
+              <span>
+                <input type="text" class="form-control" id="pimiddlename" name="pimiddlename"
+                  formControlName="pimiddlename">
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="pilastname">Last Name:</label>
+              <span>
+                <input type="text" class="form-control" id="pilastname" name="pilastname" formControlName="pilastname">
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="pidob">Date Of Birth:</label>
+              <span>
+                <input type="text" class="form-control" id="pidob" name="pidob" formControlName="pidob">
+              </span>
+            </div>
+            <!-- <div class="form-group">
+              <label for="pigender">Sex:</label>
+              <mat-radio-group class="radio-group" formControlName="pisex">
+                <mat-radio-button class="radio-button" value="M">
+                  Male
+                </mat-radio-button>
+                <mat-radio-button class="radio-button" value="F">
+                  Female
+                </mat-radio-button>
+              </mat-radio-group>
+            </div> -->
+
+            <div class="form-group">
+              <label for="pinationality">Nationality:</label>
+              <span>
+                <input type="text" class="form-control" id="pinationality" name="pinationality"
+                  formControlName="pinationality">
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="picor">Country Of Residence:</label>
+              <span>
+                <input type="text" class="form-control" id="picor" name="picor" formControlName="picor">
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="piage">Age:</label>
+              <span>
+                <input type="text" class="form-control" id="piage" name="piage" formControlName="piage">
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="pipob">Place Of Birth:</label>
+              <span>
+                <input type="text" class="form-control" id="pipob" name="pipob" formControlName="pipob">
+              </span>
+            </div>
+
+
+
+            <button type="button" class="btn btn-primary" id="save" [routerLink]="['/*']" (click)="save()">Save</button>
+          </form>
+        </tab>
+        <tab tabTitle="Personal Details (Proposer)">
+
+          <form [formGroup]="personalFormPP">
+            <div class="form-group boxalign2">
+              <label for="purpose">Purpose of insurance:</label>
+              <input type="text" class="form-control rounded2" id="pppurpose" name="pppurpose"
+                formControlName="pppurpose">
+            </div>
+            <div class="form-group">
+              <label for="firstname">First Name:</label>
+              <input type="text" class="form-control" id="ppfirstname" name="ppfirstname" formControlName="ppfirstname">
+            </div>
+
+            <div class="form-group">
+              <label for="ppmiddlename">Middle Name:</label>
+              <input type="text" class="form-control" id="ppmiddlename" name="ppmiddlename"
+                formControlName="ppmiddlename">
+            </div>
+            <div class="form-group">
+              <label for="pplastname">Last Name:</label>
+              <input type="text" class="form-control" id="pplastname" name="pplastname" formControlName="pplastname">
+            </div>
+            <div class="form-group">
+              <label for="ppdob">Date Of Birth:</label>
+              <input type="text" class="form-control" id="ppdob" name="ppdob" formControlName="ppdob">
+            </div>
+            <div class="form-group">
+              <label for="ppnationality">Nationality:</label>
+              <input type="text" class="form-control" id="ppnationality" name="ppnationality"
+                formControlName="ppnationality">
+            </div>
+            <div class="form-group">
+              <label for="ppcor">Country Of Residence:</label>
+              <input type="text" class="form-control" id="ppcor" name="ppcor" formControlName="ppcor">
+            </div>
+            <div class="form-group">
+              <label for="ppage">Age:</label>
+              <input type="text" class="form-control" id="ppage" name="ppage" formControlName="ppage">
+            </div>
+            <div class="form-group">
+              <label for="pppob">Place Of Birth:</label>
+              <input type="text" class="form-control" id="pppob" name="pppob" formControlName="pppob">
+            </div>
+
+
+            <button type="button" class="btn btn-primary" id="save" [routerLink]="['/*']" (click)="save()">Save</button>
+          </form>
+        </tab>
+      </tabs>
+
+    </div>
+  </div>
+  <!-- </div>
+  </div> -->
+</div>

@@ -1,0 +1,81 @@
+#b1 {
+  padding : 5px;
+  margin : 5px
+}
+.carousel-indicators {
+  width: 5%;
+  top:5px;
+  left: 77.5%;
+  position: absolute;
+  white-space: nowrap;
+}
+.carousel-indicators .active {
+  background-color:black;
+}
+.carousel-indicators li {
+   border-color:black;
+   cursor:default;
+}
+.red{
+  color:red;
+}
+.error{
+  color:red;
+
+}
+.line-breaker {
+white-space: pre-line;
+}
+
+
+label {
+  float: left
+}
+span {
+  display: block;
+  overflow: hidden;
+  padding: 0 4px 0 6px
+}
+input {
+  width: 300px;
+  float: right;
+
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.radio-button {
+  margin: 5px;
+}
+
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+#selectionMarquee {
+  z-position: 1000;
+  position: absolute;
+  border: 1px solid #FF0000;
+}
+
+.selected-box {
+  z-position: 999;
+  position: absolute;
+  border: 1px solid #FF0000;
+}
+#all-cords {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  background: #9f9;
+}
+
+
